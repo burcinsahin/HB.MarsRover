@@ -7,6 +7,11 @@ namespace HB.MarsRover.ConsoleApp.Helpers
 {
     public class NasaHelper
     {
+        /// <summary>
+        /// Loads the plateau with rovers from a batch of inputs
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static IPlateau LoadPlateau(List<string> input)
         {
             ValidateInput(input);
