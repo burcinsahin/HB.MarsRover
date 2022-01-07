@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HB.MarsRover.ConsoleApp
+﻿namespace HB.MarsRover.ConsoleApp.Helpers
 {
     public static class Extensions
     {
-        public static bool IsOdd(this int number) 
+        public static bool IsOdd(this int number)
         {
             return number % 2 == 1;
         }

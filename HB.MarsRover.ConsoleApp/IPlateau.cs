@@ -1,4 +1,4 @@
-﻿namespace HB.MarsRover
+﻿namespace HB.MarsRover.ConsoleApp
 {
     public interface IPlateau
     {
@@ -11,5 +11,11 @@
         /// Y point of upper-right
         /// </summary>
         int Y { get; }
+
+        /// <summary>
+        /// Lands a new rover to plateau
+        /// </summary>
+        /// <param name="rover"></param>
+        void Add(IRover rover);
     }
 }

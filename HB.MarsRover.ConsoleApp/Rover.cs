@@ -1,4 +1,6 @@
-﻿namespace HB.MarsRover
+﻿using HB.MarsRover.ConsoleApp.Exceptions;
+
+namespace HB.MarsRover.ConsoleApp
 {
     public class Rover : IRover
     {
@@ -38,12 +40,19 @@
 
         private sbyte _direction;
 
+        public Rover(IPlateau plateau)
+            : this(0, 0, 'N', plateau) { }
+
         public Rover(int x, int y, char direction, IPlateau plateau)
         {
+            LandedPlateau = plateau;
+
+            if (x > LandedPlateau.X || y > LandedPlateau.Y)
+                throw new InvalidPositionException();
+
             X = x;
             Y = y;
             Direction = direction;
-            LandedPlateau = plateau;
         }
 
         public void Move(string command)

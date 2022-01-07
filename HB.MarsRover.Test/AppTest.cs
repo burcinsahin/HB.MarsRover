@@ -1,13 +1,29 @@
 using FluentAssertions;
 using HB.MarsRover.ConsoleApp;
+using HB.MarsRover.ConsoleApp.Exceptions;
+using HB.MarsRover.ConsoleApp.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace HB.MarsRover.Test
 {
     public class AppTest
     {
+        private readonly ITestOutputHelper _outputHelper;
+
+        public AppTest(ITestOutputHelper outputHelper)
+        {
+            _outputHelper = outputHelper;
+        }
+
+        private void WriteLine(string format, params string[] args)
+        {
+            _outputHelper.WriteLine(format, args);
+        }
+
         [Fact]
         public void Main()
         {
@@ -31,11 +47,19 @@ namespace HB.MarsRover.Test
         public void LoadPlateau()
         {
             var input = new List<string>() { "5 5", "1 2 N", "LMLMLMLMM", "3 3 E", "MMRMMRMRRM" };
-            var plateau = Program.LoadPlateau(input);
+            var plateau = NasaHelper.LoadPlateau(input);
             plateau.ToString().Should().Be("1 3 N\r\n5 1 E\r\n");
 
-            input = new List<string>() { "120 120", "5 5 E", "MMMRMMMLMMM" };
+            input = new List<string>() { "10 10", "5 5 E", "MMMRMMMLMMMRMMM" };
+            plateau = NasaHelper.LoadPlateau(input);
+            plateau.ToString().Should().Be("10 0 S\r\n");
 
+            Action action = () => 
+            {
+                input = new List<string>() { "10 10", "11 5 N", "MMMRMMMLMMMRMMM" };
+                plateau = NasaHelper.LoadPlateau(input);
+            };
+            action.Should().ThrowExactly<InvalidPositionException>();
         }
 
         [Fact]
@@ -56,19 +80,14 @@ namespace HB.MarsRover.Test
             regex2.IsMatch("1 3 NT").Should().BeFalse();
 
             var regex3 = new Regex(@"^\w+$");
-            regex3.IsMatch("RLM").Should().BeTrue();
+            regex3.IsMatch("RLMGSD").Should().BeTrue();
+            regex3.IsMatch("RLM asda").Should().BeFalse();
         }
 
         [Fact]
         public void StringSplit()
         {
             "3 5".Split().Length.Should().Be(2);
-        }
-
-        [Fact]
-        public void MyTestMethod()
-        {
-
         }
     }
 }

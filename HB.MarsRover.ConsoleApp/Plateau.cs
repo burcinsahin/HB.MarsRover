@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace HB.MarsRover
+namespace HB.MarsRover.ConsoleApp
 {
     public class Plateau : IPlateau
     {
@@ -11,8 +11,8 @@ namespace HB.MarsRover
 
         public Plateau(int x, int y)
         {
-            X = x + 1;
-            Y = y + 1;
+            X = x;
+            Y = y;
             Rovers = new List<IRover>();
         }
 

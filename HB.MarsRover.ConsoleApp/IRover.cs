@@ -1,4 +1,4 @@
-﻿namespace HB.MarsRover
+﻿namespace HB.MarsRover.ConsoleApp
 {
     public interface IRover
     {
