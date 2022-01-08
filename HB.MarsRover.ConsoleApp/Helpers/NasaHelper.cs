@@ -46,7 +46,7 @@ namespace HB.MarsRover.ConsoleApp.Helpers
                 throw new InvalidInputException();
 
             var regex2 = new Regex(@"^\d+\s\d+\s\w{1}$");
-            var regex3 = new Regex(@"^\w*$");
+            var regex3 = new Regex(@"^\w+$");
 
             for (int i = 1; i < input.Count; i++)
             {
