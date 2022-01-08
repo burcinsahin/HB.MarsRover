@@ -1,4 +1,6 @@
-﻿namespace HB.MarsRover.ConsoleApp
+﻿using System.Collections.Generic;
+
+namespace HB.MarsRover.ConsoleApp
 {
     public interface IPlateau
     {
@@ -11,6 +13,7 @@
         /// Y point of upper-right
         /// </summary>
         int Y { get; }
+        List<IRover> Rovers { get; }
 
         /// <summary>
         /// Lands a new rover to plateau

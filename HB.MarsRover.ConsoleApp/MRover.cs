@@ -1,16 +1,13 @@
 ﻿using HB.MarsRover.ConsoleApp.Exceptions;
+using System.Linq;
 
 namespace HB.MarsRover.ConsoleApp
 {
-    public class Rover : IRover
+    public class MRover : BaseRover
     {
         private static readonly char[] directions = { 'N', 'E', 'S', 'W' };
 
-        public IPlateau LandedPlateau { private get; set; }
-
-        public int X { get; protected set; }
-        public int Y { get; protected set; }
-        public char Direction
+        public override char Direction
         {
             get
             {
@@ -40,22 +37,23 @@ namespace HB.MarsRover.ConsoleApp
 
         private sbyte _direction;
 
-        public Rover(IPlateau plateau)
-            : this(0, 0, 'N', plateau) { }
-
-        public Rover(int x, int y, char direction, IPlateau plateau)
+        public MRover(IPlateau plateau, int x = 0, int y = 0, char direction = 'N')
+            : base(x, y, direction)
         {
             LandedPlateau = plateau;
 
             if (x > LandedPlateau.X || y > LandedPlateau.Y)
                 throw new InvalidPositionException();
 
+            if (LandedPlateau.Rovers.Any(r => r.X == x && r.Y == y))
+                throw new InvalidPositionException("Another rover is available at the same position!");
+
             X = x;
             Y = y;
             Direction = direction;
         }
 
-        public void Move(string command)
+        public override void Move(string command)
         {
             foreach (var c in command)
             {
@@ -70,27 +68,37 @@ namespace HB.MarsRover.ConsoleApp
                         if (_direction > 3) _direction %= 4;
                         break;
                     case 'M':
+                        var nextX = X;
+                        var nextY = Y;
                         switch (_direction)
                         {
                             case 0:
                                 if (Y < LandedPlateau.Y)
-                                    Y++;
+                                    nextY++;
                                 break;
                             case 1:
                                 if (X < LandedPlateau.X)
-                                    X++;
+                                    nextX++;
                                 break;
                             case 2:
                                 if (Y > 0)
-                                    Y--;
+                                    nextY--;
                                 break;
                             case 3:
                                 if (X > 0)
-                                    X--;
+                                    nextX--;
                                 break;
                             default:
                                 throw new InvalidDirectionException();
                         }
+                        if (LandedPlateau.Rovers.Any(r => r.X == nextX && r.Y == nextY))
+                        {
+                            //conflicts of rovers, do not move
+                            break;
+                        }
+                        //move
+                        X = nextX;
+                        Y = nextY;
                         break;
                     default:
                         break;
@@ -98,9 +106,17 @@ namespace HB.MarsRover.ConsoleApp
             }
         }
 
-        public override string ToString()
+        public override bool Equals(object obj)
         {
-            return $"{X} {Y} {Direction}";
+            if (obj is IRover rover)
+                return rover.X == X && rover.Y == Y;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return X ^ Y;
         }
     }
 }

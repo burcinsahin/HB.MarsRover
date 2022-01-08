@@ -17,12 +17,12 @@ namespace HB.MarsRover.ConsoleApp.Helpers
             ValidateInput(input);
 
             var coords = input[0].Split().Select(int.Parse);
-            var plateau = new Plateau(coords.ElementAt(0), coords.ElementAt(1));
+            var plateau = new MPlateau(coords.ElementAt(0), coords.ElementAt(1));
 
             for (int i = 1; i <= input.Count / 2; i++)
             {
                 var roverInfo = input[2 * i - 1].Split();
-                var rover = new Rover(int.Parse(roverInfo[0]), int.Parse(roverInfo[1]), char.Parse(roverInfo[2]), plateau);
+                var rover = new MRover(plateau, int.Parse(roverInfo[0]), int.Parse(roverInfo[1]), char.Parse(roverInfo[2]));
                 plateau.Add(rover);
 
                 rover.Move(input[2 * i]);
@@ -46,7 +46,7 @@ namespace HB.MarsRover.ConsoleApp.Helpers
                 throw new InvalidInputException();
 
             var regex2 = new Regex(@"^\d+\s\d+\s\w{1}$");
-            var regex3 = new Regex(@"^\w+$");
+            var regex3 = new Regex(@"^\w*$");
 
             for (int i = 1; i < input.Count; i++)
             {

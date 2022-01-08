@@ -27,8 +27,8 @@ namespace HB.MarsRover.Test
         [Fact]
         public void Main()
         {
-            var plateau = new Plateau(5, 5);
-            var rover = new Rover(1, 2, 'N', plateau);
+            var plateau = new MPlateau(5, 5);
+            var rover = new MRover(plateau, 1, 2, 'N');
             plateau.Add(rover);
             rover.Move("LMLMLMLMM");
 
@@ -37,7 +37,7 @@ namespace HB.MarsRover.Test
             rover.Direction.Should().Be('N');
             rover.ToString().Should().Be("1 3 N");
 
-            var rover2 = new Rover(3, 3, 'E', plateau);
+            var rover2 = new MRover(plateau, 3, 3, 'E');
             plateau.Add(rover2);
             rover2.Move("MMRMMRMRRM");
             rover2.ToString().Should().Be("5 1 E");
@@ -54,12 +54,27 @@ namespace HB.MarsRover.Test
             plateau = NasaHelper.LoadPlateau(input);
             plateau.ToString().Should().Be("10 0 S\r\n");
 
-            Action action = () => 
+            input = new List<string>() { "10 10", "5 5 E", "", "5 4 N", "M", "4 4 N", "RM" };
+            plateau = NasaHelper.LoadPlateau(input);
+            plateau.ToString().Should().Be("5 5 E\r\n5 4 N\r\n4 4 E\r\n");
+        }
+
+        [Fact]
+        public void InvalidPosition()
+        {
+            Action action = () =>
             {
-                input = new List<string>() { "10 10", "11 5 N", "MMMRMMMLMMMRMMM" };
-                plateau = NasaHelper.LoadPlateau(input);
+                var input = new List<string>() { "10 10", "11 5 N", "MMMRMMMLMMMRMMM" };
+                var plateau = NasaHelper.LoadPlateau(input);
             };
             action.Should().ThrowExactly<InvalidPositionException>();
+
+            Action action2 = () =>
+            {
+                var input = new List<string>() { "10 10", "1 1 N", "M", "1 2 N", "M" };
+                var plateau = NasaHelper.LoadPlateau(input);
+            };
+            action2.Should().ThrowExactly<InvalidPositionException>();
         }
 
         [Fact]
@@ -79,8 +94,9 @@ namespace HB.MarsRover.Test
             regex2.IsMatch("1 3  N").Should().BeFalse();
             regex2.IsMatch("1 3 NT").Should().BeFalse();
 
-            var regex3 = new Regex(@"^\w+$");
+            var regex3 = new Regex(@"^\w*$");
             regex3.IsMatch("RLMGSD").Should().BeTrue();
+            regex3.IsMatch("").Should().BeTrue();
             regex3.IsMatch("RLM asda").Should().BeFalse();
         }
 

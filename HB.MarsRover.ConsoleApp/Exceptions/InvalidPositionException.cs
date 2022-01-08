@@ -7,5 +7,9 @@ namespace HB.MarsRover.ConsoleApp.Exceptions
         public InvalidPositionException()
         {
         }
+
+        public InvalidPositionException(string message) : base(message)
+        {
+        }
     }
 }
