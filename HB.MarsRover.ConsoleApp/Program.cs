@@ -29,6 +29,7 @@ namespace HB.MarsRover.ConsoleApp
             finally
             {
                 Console.WriteLine("Press any key to exit...");
+                Console.Read();
             }
         }
 
